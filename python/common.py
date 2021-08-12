@@ -54,10 +54,10 @@ def main(input_args):
 
         ## Search for cpn60
         cpn60_seq = blast_search.blast_search_for_gene(fasta_file, "cpn60", data_dir, aa_dir_name, bassio_nameo, input_args.threads)
-        print(cpn60_seq)
+
         # Search for fusA
         fusA_seq = blast_search.blast_search_for_gene(fasta_file, "fusA", data_dir, aa_dir_name, bassio_nameo, input_args.threads)
-        print(fusA_seq)
+
         # Search for gltA
         gltA_seq = blast_search.blast_search_for_gene(fasta_file, "gltA", data_dir, aa_dir_name, bassio_nameo, input_args.threads)
         # Search for pyrG
@@ -85,8 +85,14 @@ def main(input_args):
 
         out_st = blast_processing.ST_process(data_dir, res_df)
         out_df.loc[k] = out_st.iloc[0]
+        toc_blast_run = time.perf_counter()
+        print("Took this long for isolate blast processing %s (s)" % (toc_blast_run - tic_blast_process))
 
-    print(out_df)
+    toc_blast_run = time.perf_counter()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print()
+    print("Took this long for %s isolates %s (minutes)" % (len(seq_lines),round((toc_blast_run - tic_setup)/ 60, 3)))
+    out_df.to_csv((input_args.output + "_ST.csv"), index=None)
 
 
 
