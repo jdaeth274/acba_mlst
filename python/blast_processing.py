@@ -1,5 +1,4 @@
-import sys
-
+import math
 import pandas as pd
 
 
@@ -10,22 +9,25 @@ def process_blast(blast_csv, gene_length, gene):
                   'qstart','qend','sstart','send','eval','bitscore']
 
     blast_res = pd.read_csv(blast_csv, names=blast_cols, header = None)
-
-    hundred_matches = blast_res[blast_res['pid'] == 100]
-    if hundred_matches.empty:
-        print("No perfect matches for this isolate for gene: %s"  % blast_res.iloc[0,1])
-        return int(blast_res.iloc[0,1].replace((gene + "_"),""))
+    if blast_res.empty:
+        print("No blast matches for this %s in isolate" % (gene))
+        return math.nan
     else:
-        perf_length = hundred_matches[hundred_matches['length'] == gene_length + 1]
-        if perf_length.empty:
-            perf_length = hundred_matches[hundred_matches['length'] == gene_length]
-            if perf_length.empty:
-                print("No perfect length matches for this isolate for gene: %s" % blast_res.iloc[0, 1])
-                return int(hundred_matches.iloc[0, 1].replace((gene + "_"),""))
-            else:
-                return int(hundred_matches.iloc[0,1].replace((gene + "_"),""))
+        hundred_matches = blast_res[blast_res['pid'] == 100]
+        if hundred_matches.empty:
+            print("No perfect matches for this isolate for gene: %s"  % gene)
+            return int(blast_res.iloc[0,1].replace((gene + "_"),""))
         else:
-            return int(hundred_matches.iloc[0, 1].replace((gene + "_"), ""))
+            perf_length = hundred_matches[hundred_matches['length'] == gene_length + 1]
+            if perf_length.empty:
+                perf_length = hundred_matches[hundred_matches['length'] == gene_length]
+                if perf_length.empty:
+                    print("No perfect length matches for this isolate for gene: %s" % blast_res.iloc[0, 1])
+                    return int(hundred_matches.iloc[0, 1].replace((gene + "_"),""))
+                else:
+                    return int(hundred_matches.iloc[0,1].replace((gene + "_"),""))
+            else:
+                return int(hundred_matches.iloc[0, 1].replace((gene + "_"), ""))
 
 
 def ST_process(data_dir, isolate_row):
