@@ -36,7 +36,7 @@ def hmm_search_for_gene(fasta, gene, aa_dir_name, data_dir, gene_leng, tolerance
             hmm_best_hsp_index = i
 
     if hmm_best_hsp_index is None:
-        return "Missing_HMM", gff_base
+        return "Missing_HMM", hmm_output_fn
 
     hmm_best_hsp = hmm_output[0][hmm_best_hsp_index][0]
     #subprocess.call('rm ' + hmm_output_fn, shell=True)
